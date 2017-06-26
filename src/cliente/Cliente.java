@@ -6,6 +6,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 import InterfacesCliente.MsgCliente;
 import InterfacesServidor.CentralChat;
 
@@ -14,7 +16,11 @@ public class Cliente {
 		Scanner sc = new Scanner(System.in);
 		MsgClienteImp mc = new MsgClienteImp();
 		System.out.println("Digite o nome do cliente: ");
-		mc.nome = sc.next();
+		mc.nome = JOptionPane.showInputDialog("Qual é o seu nome?");
+		while(mc.nome == null || mc.nome.isEmpty()){
+			mc.nome = JOptionPane.showInputDialog("Digite um novo valido. Qual é o seu nome?");
+		}
+				//mc.nome = sc.next();
 		
 		try {
 			MsgCliente m = (MsgCliente)UnicastRemoteObject.exportObject(mc,0);
