@@ -15,34 +15,40 @@ public class Cliente {
 	public static void main(String args[]){
 		Scanner sc = new Scanner(System.in);
 		MsgClienteImp mc = new MsgClienteImp();
+		int opcao = 0;
 		System.out.println("Digite o nome do cliente: ");
 		mc.nome = JOptionPane.showInputDialog("Qual È o seu nome?");
-		while(mc.nome == null || mc.nome.isEmpty()){
+		//mc.nome = sc.next();
+		while(mc.nome != null && mc.nome.isEmpty()){
 			mc.nome = JOptionPane.showInputDialog("Digite um novo valido. Qual È o seu nome?");
 		}
-				//mc.nome = sc.next();
 		
-		try {
-			MsgCliente m = (MsgCliente)UnicastRemoteObject.exportObject(mc,0);
-		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		String host="localhost";
-		try {
-			Registry registry = LocateRegistry.getRegistry(host);
-			CentralChat stub = (CentralChat) registry.lookup("CentralChat");
-			if (stub!=null){
-				JanelaChat jc = new JanelaChat(stub,mc);
-				jc.setTitle(mc.nomeCliente());
-				mc.setJanela(jc);
-				stub.registrarCliente((MsgCliente)mc);
-				System.out.println("Cliente Registrado");
-				//stub.enviarMensagem("Ol√°", (MsgCliente)mc);
+		if(mc.nome != null){
+			try {
+				MsgCliente m = (MsgCliente)UnicastRemoteObject.exportObject(mc,0);
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		} catch (Exception e) {
-			System.err.println("Client exception: " + e.toString());
-			e.printStackTrace();
+			String host="localhost";
+			try {
+				Registry registry = LocateRegistry.getRegistry(host);
+				CentralChat stub = (CentralChat) registry.lookup("CentralChat");
+				if (stub!=null){
+					JanelaChat jc = new JanelaChat(stub,mc);
+					jc.setTitle(mc.nomeCliente());
+					mc.setJanela(jc);
+					stub.registrarCliente((MsgCliente)mc);
+					System.out.println("Cliente Registrado");
+					//stub.enviarMensagem("Ol√°", (MsgCliente)mc);
+				}
+			} catch (Exception e) {
+				System.err.println("Client exception: " + e.toString());
+				e.printStackTrace();
+			}
 		}
+				
+		
+	
 	}
 }
